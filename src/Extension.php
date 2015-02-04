@@ -260,10 +260,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( self::get_gateway_configuration_id() );
 
-$test = it_exchange_get_cart_total( false );
-if ( $test <= 0 ) {
-var_dump( $test );
-}
 		if ( $gateway ) {
 
 			$payment_form .= '<form action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
