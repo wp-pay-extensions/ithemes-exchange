@@ -256,6 +256,15 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * Build the iDEAL payment form.
 	 */
 	public static function make_payment_button() {
+		// Return early if cart total is <= 0
+		// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.11.8/core-addons/transaction-methods/paypal-standard/init.php#L359-L362
+		// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.11.8/api/cart.php#L781-L809
+		$cart_total = it_exchange_get_cart_total( false );
+		if ( $cart_total <= 0 ) {
+			return;
+		}
+
+		// Cart total > 0
 		$payment_form = '';
 
 		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( self::get_gateway_configuration_id() );
