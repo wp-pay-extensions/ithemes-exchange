@@ -1,0 +1,43 @@
+{
+	"name": "wp-pay-extensions/ithemes-exchange",
+	"description": "iThemes Exchange driver for the WordPress payment processing library.",
+	"keywords": ["wordpress", "wp", "pay", "ithemes", "exchange", "extension", "pronamic"],
+	"homepage": "http://www.wp-pay.org/extensions/ithemes-exchange/",
+	"license": "GPL-3.0+",
+	"authors": [
+		{
+			"name": "Pronamic",
+			"email": "info@pronamic.eu",
+			"homepage": "http://www.pronamic.eu/",
+			"role": "Company"
+		},
+		{
+			"name": "Remco Tolsma",
+			"email": "info@remcotolsma.nl",
+			"homepage": "http://www.remcotolsma.nl/",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"email": "support@wp-pay.org",
+		"issues": "https://github.com/wp-pay-extensions/ithemes-exchange/issues",
+		"source": "https://github.com/wp-pay-extensions/ithemes-exchange"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	},
+	"repositories":[
+		{
+			"type": "composer",
+			"url": "http://wpackagist.org/"
+		}
+	],
+	"require": {
+		"php": ">=5.2.4",
+		"wpackagist-plugin/ithemes-exchange": "1.11.8",
+		"wp-pay/core": "dev-develop"
+	},
+	"require-dev": {
+		"satooshi/php-coveralls": "dev-master"
+	}
+}
