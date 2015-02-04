@@ -63,7 +63,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 			'icon'              => plugins_url( 'images/icon-50x50.png', Pronamic_WP_Pay_Plugin::$file ),
 			// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.7.16/core-addons/load.php#L42
 			'wizard-icon'       => plugins_url( 'images/icon-50x50.png', Pronamic_WP_Pay_Plugin::$file ),
-			'file'              => Pronamic_WP_Pay_Plugin::$dirname . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'ithemes-exchange' . DIRECTORY_SEPARATOR . 'add-on.php',
+			'file'              => Pronamic_WP_Pay_Plugin::$dirname . '/includes/ithemes-exchange/add-on.php',
 			'category'          => 'transaction-methods',
 			'supports'          => array( 'transaction_status' => true ),
 			'settings-callback' => array( __CLASS__, 'settings' ),
@@ -256,6 +256,15 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * Build the iDEAL payment form.
 	 */
 	public static function make_payment_button() {
+		// Return early if cart total is <= 0
+		// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.11.8/core-addons/transaction-methods/paypal-standard/init.php#L359-L362
+		// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.11.8/api/cart.php#L781-L809
+		$cart_total = it_exchange_get_cart_total( false );
+		if ( $cart_total <= 0 ) {
+			return;
+		}
+
+		// Cart total > 0
 		$payment_form = '';
 
 		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( self::get_gateway_configuration_id() );
