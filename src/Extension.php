@@ -63,7 +63,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 			'icon'              => plugins_url( 'images/icon-50x50.png', Pronamic_WP_Pay_Plugin::$file ),
 			// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.7.16/core-addons/load.php#L42
 			'wizard-icon'       => plugins_url( 'images/icon-50x50.png', Pronamic_WP_Pay_Plugin::$file ),
-			'file'              => Pronamic_WP_Pay_Plugin::$dirname . '/includes/ithemes-exchange/add-on.php',
+			'file'              => dirname( __FILE__ ) . '/../views/add-on.php',
 			'category'          => 'transaction-methods',
 			'supports'          => array( 'transaction_status' => true ),
 			'settings-callback' => array( __CLASS__, 'settings' ),
@@ -201,16 +201,14 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * Addon settings.
 	 */
 	public static function settings() {
-
-		include Pronamic_WP_Pay_Plugin::$dirname . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'ithemes-exchange' . DIRECTORY_SEPARATOR . 'settings.php';
+		include dirname( __FILE__ ) . '/../views/html-admin-page-settings.php';
 	}
 
 	/**
 	 * Wizard settings.
 	 */
 	public static function wizard_settings() {
-
-		include Pronamic_WP_Pay_Plugin::$dirname . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'ithemes-exchange' . DIRECTORY_SEPARATOR . 'wizard-settings.php';
+		include dirname( __FILE__ ) . '/../views/html-admin-wizard-settings.php';
 	}
 
 	/**
