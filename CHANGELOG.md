@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+- Add order ID to payment description
 
 ## [1.1.0] - 2015-05-26
 - Imported a few views from the Pronamic iDEAL plugin.

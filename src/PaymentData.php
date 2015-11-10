@@ -76,7 +76,9 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 * @return string
 	 */
 	public function get_description() {
-		return $this->transaction_object->description;
+		$description = sprintf( __( 'Order #%s', 'pronamic_ideal' ), $this->get_order_id() );
+
+		return $description . ' - ' . $this->transaction_object->description;
 	}
 
 	/**
