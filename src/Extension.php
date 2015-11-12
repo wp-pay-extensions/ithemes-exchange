@@ -38,6 +38,13 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 */
 	const BUTTON_TITLE_OPTION_KEY = 'pronamic_ithemes_exchange_ideal_addon_button_title';
 
+	/**
+	 * The option key that stores the payment method.
+	 *
+	 * @const string
+	 */
+	const PAYMENT_METHOD_OPTION_KEY = 'pronamic_ithemes_exchange_ideal_addon_payment_method';
+
 	//////////////////////////////////////////////////
 
 	/**
@@ -126,8 +133,22 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 			) // args
 		);
 
+		add_settings_field(
+			self::PAYMENT_METHOD_OPTION_KEY, // id
+			__( 'Payment Method', 'pronamic_ideal' ), // title
+			array( __CLASS__, 'input_select' ), // callback
+			self::OPTION_GROUP, // page
+			self::OPTION_GROUP, // section
+			array(
+				'label_for' => self::PAYMENT_METHOD_OPTION_KEY,
+				'options'   => self::get_payment_method_select_options(),
+				'default'   => '0',
+			) // args
+		);
+
 		register_setting( self::OPTION_GROUP, self::BUTTON_TITLE_OPTION_KEY );
 		register_setting( self::OPTION_GROUP, self::CONFIGURATION_OPTION_KEY );
+		register_setting( self::OPTION_GROUP, self::PAYMENT_METHOD_OPTION_KEY );
 	}
 
 	/**
@@ -184,6 +205,10 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 		$current_value = get_option( $name );
 
+		if ( empty( $current_value ) && isset( $args['default'] ) ) {
+			$current_value = $args['default'];
+		}
+
 		foreach ( $options as $option_key => $option ) {
 
 			printf(
@@ -195,6 +220,25 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		}
 
 		echo '</select>';
+	}
+
+	/**
+	 * Payment method select options
+	 */
+	public static function get_payment_method_select_options() {
+		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( self::get_gateway_configuration_id() );
+
+		if ( $gateway ) {
+			$payment_method_field = $gateway->get_payment_method_field();
+
+			if ( $payment_method_field ) {
+				return $payment_method_field['choices'][0]['options'];
+			}
+		}
+
+		return array(
+			'' => _x( 'All', 'Payment method field', 'pronamic-ideal' )
+		);
 	}
 
 	/**
@@ -219,11 +263,13 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * @return array $errors
 	 */
 	public static function save_wizard_settings( $errors ) {
-		$title     = filter_input( INPUT_POST, self::BUTTON_TITLE_OPTION_KEY , FILTER_SANITIZE_STRING );
-		$config_id = filter_input( INPUT_POST, self::CONFIGURATION_OPTION_KEY, FILTER_VALIDATE_INT );
+		$title          = filter_input( INPUT_POST, self::BUTTON_TITLE_OPTION_KEY , FILTER_SANITIZE_STRING );
+		$config_id      = filter_input( INPUT_POST, self::CONFIGURATION_OPTION_KEY, FILTER_VALIDATE_INT );
+		$payment_method = filter_input( INPUT_POST, self::PAYMENT_METHOD_OPTION_KEY, FILTER_SANITIZE_STRING );
 
 		update_option( self::BUTTON_TITLE_OPTION_KEY, $title );
 		update_option( self::CONFIGURATION_OPTION_KEY, $config_id );
+		update_option( self::PAYMENT_METHOD_OPTION_KEY, $payment_method );
 
 		return $errors;
 	}
@@ -248,6 +294,21 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		return get_option( self::CONFIGURATION_OPTION_KEY, 0 );
 	}
 
+	/**
+	 * Get the iDEAL gateway payment method.
+	 *
+	 * @return string $payment_method
+	 */
+	public static function get_gateway_payment_method() {
+		$payment_method = get_option( self::PAYMENT_METHOD_OPTION_KEY, '' );
+
+		if ( $payment_method == '0' ) {
+			return null;
+		}
+
+		return $payment_method;
+	}
+
 	//////////////////////////////////////////////////
 
 	/**
@@ -268,6 +329,8 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( self::get_gateway_configuration_id() );
 
 		if ( $gateway ) {
+
+			$gateway->set_payment_method( self::get_gateway_payment_method() );
 
 			$payment_form .= '<form action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
 			$payment_form .= '<input type="hidden" name="it-exchange-transaction-method" value="' . self::$slug . '" />';
@@ -313,9 +376,19 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 			$data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( $unique_hash, $transaction_object );
 
-			$payment = Pronamic_WP_Pay_Plugin::start( $configuration_id, $gateway, $data );
+			$payment_method = self::get_gateway_payment_method();
 
-			$gateway->redirect( $payment );
+			$gateway->set_payment_method( $payment_method );
+
+			$payment = Pronamic_WP_Pay_Plugin::start( $configuration_id, $gateway, $data, $payment_method );
+
+			$error = $gateway->get_error();
+
+			if ( is_wp_error( $error ) ) {
+				Pronamic_WP_Pay_Plugin::render_errors( $error );
+			} else {
+				$gateway->redirect( $payment );
+			}
 
 			exit;
 		}
