@@ -3,10 +3,12 @@
 /**
  * Title: iThemes Exchange payment data
  * Description:
- * Copyright: Copyright (c) 2005 - 2015
+ * Copyright: Copyright (c) 2005 - 2016
  * Company: Pronamic
+ *
  * @author Stefan Boonstra
  * @version 1.0.0
+ * @since 1.0.0
  */
 class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP_Pay_PaymentData {
 
@@ -76,7 +78,9 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 * @return string
 	 */
 	public function get_description() {
-		return $this->transaction_object->description;
+		$description = sprintf( __( 'Order #%s', 'pronamic_ideal' ), $this->get_order_id() );
+
+		return $description . ' - ' . $this->transaction_object->description;
 	}
 
 	/**

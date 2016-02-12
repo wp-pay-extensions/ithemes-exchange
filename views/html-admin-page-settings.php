@@ -1,9 +1,9 @@
 <div class="wrap">
-	<h2><?php _e( 'iDEAL', 'pronamic_ideal' ); ?></h2>
+	<h1><?php esc_html_e( 'iDEAL', 'pronamic_ideal' ); ?></h1>
 
 	<div class="it-exchange-return-to-addons">
 		<p>
-			<a href="<?php echo remove_query_arg( 'add-on-settings' ); ?>">&larr; <?php _e( 'Back to Add-ons', 'pronamic_ideal' ); ?></a>
+			<a href="<?php echo esc_attr( remove_query_arg( 'add-on-settings' ) ); ?>">&larr; <?php esc_html_e( 'Back to Add-ons', 'pronamic_ideal' ); ?></a>
 		</p>
 	</div>
 
