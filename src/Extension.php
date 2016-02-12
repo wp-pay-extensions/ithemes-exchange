@@ -5,8 +5,10 @@
  * Description:
  * Copyright Copyright (c) 2005 - 2016
  * Company: Pronamic
+ *
  * @author Stefan Boonstra
  * @version 1.0.0
+ * @since 1.0.0
  */
 class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
@@ -237,7 +239,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		}
 
 		return array(
-			'' => _x( 'All', 'Payment method field', 'pronamic-ideal' )
+			'' => _x( 'All', 'Payment method field', 'pronamic-ideal' ),
 		);
 	}
 
@@ -302,7 +304,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	public static function get_gateway_payment_method() {
 		$payment_method = get_option( self::PAYMENT_METHOD_OPTION_KEY, '' );
 
-		if ( $payment_method == '0' ) {
+		if ( '0' === $payment_method ) {
 			return null;
 		}
 

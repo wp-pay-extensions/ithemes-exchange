@@ -8,6 +8,9 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 -
 
 ## [1.1.1] - 2016-02-12
+- WordPress Coding Standards optimizations.
+- Added escaping functions to improve security.
+- Changed h2 element to h1 element on admin settings page.
 - Add support for payment methods, improve error reporting.
 - Added order ID to payment description.
 - Removed status code from redirect in status_update.
