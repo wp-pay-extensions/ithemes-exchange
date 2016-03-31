@@ -139,7 +139,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 *
 	 * @return string
 	 */
-	public function getCustomerName() {
+	public function get_customer_name() {
 		$name = '';
 
 		$shipping_address = $this->transaction_object->shipping_address;
@@ -162,7 +162,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 *
 	 * @return string
 	 */
-	public function getOwnerAddress() {
+	public function get_address() {
 		$address  = $this->transaction_object->shipping_address['address1'];
 		$address .= ' ' . $this->transaction_object->shipping_address['address2'];
 
@@ -174,7 +174,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 *
 	 * @return string
 	 */
-	public function getOwnerCity() {
+	public function get_city() {
 		return $this->transaction_object->shipping_address['city'];
 	}
 
@@ -183,7 +183,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 *
 	 * @return string
 	 */
-	public function getOwnerZip() {
+	public function get_zip() {
 		return $this->transaction_object->shipping_address['zip'];
 	}
 
