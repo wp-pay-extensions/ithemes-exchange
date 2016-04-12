@@ -29,13 +29,13 @@
 	"repositories":[
 		{
 			"type": "composer",
-			"url": "http://wpackagist.org/"
+			"url": "https://wpackagist.org/"
 		}
 	],
 	"require": {
 		"php": ">=5.2.4",
 		"wpackagist-plugin/ithemes-exchange": "1.11.8",
-		"wp-pay/core": ">=1.0.0"
+		"wp-pay/core": "^1.0.2"
 	},
 	"require-dev": {
 		"satooshi/php-coveralls": "dev-master"
