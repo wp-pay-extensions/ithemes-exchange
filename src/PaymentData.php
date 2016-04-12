@@ -7,7 +7,7 @@
  * Company: Pronamic
  *
  * @author Stefan Boonstra
- * @version 1.0.0
+ * @version 1.1.2
  * @since 1.0.0
  */
 class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP_Pay_PaymentData {
