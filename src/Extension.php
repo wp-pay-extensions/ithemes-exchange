@@ -95,6 +95,8 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		add_filter( "pronamic_payment_source_text_{$slug}", array( __CLASS__, 'source_text' ), 10, 2 );
 
 		add_filter( "it_exchange_get_{$slug}_make_payment_button", array( __CLASS__, 'make_payment_button' ) );
+
+		add_filter( "it_exchange_{$slug}_transaction_is_cleared_for_delivery", array( __CLASS__, 'transaction_is_cleared_for_delivery' ), 10, 2 );
 	}
 
 	//////////////////////////////////////////////////
@@ -312,6 +314,20 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	}
 
 	//////////////////////////////////////////////////
+
+	/**
+	 * Returns a boolean. Is this transaction a status that warrants delivery of any products attached to it?
+	 *
+	 * @since unreleased
+	 *
+	 * @param boolean $cleared passed in through WP filter. Ignored here.
+	 * @param mixed   $transaction
+	 *
+	 * @return boolean
+	 */
+	public static function transaction_is_cleared_for_delivery( $cleared, $transaction ) {
+		return Pronamic_WP_Pay_Extensions_IThemesExchange_IThemesExchange::ORDER_STATUS_PAID === it_exchange_get_transaction_status( $transaction );
+	}
 
 	/**
 	 * Build the iDEAL payment form.
