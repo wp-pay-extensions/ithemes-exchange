@@ -214,7 +214,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		}
 
 		foreach ( $options as $option_key => $option ) {
-
 			printf(
 				'<option value="%s" %s>%s</option>',
 				esc_attr( $option_key ),
@@ -347,7 +346,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( self::get_gateway_configuration_id() );
 
 		if ( $gateway ) {
-
 			$gateway->set_payment_method( self::get_gateway_payment_method() );
 
 			$payment_form .= '<form action="' . it_exchange_get_page_url( 'transaction' ) . '" method="post">';
@@ -370,7 +368,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		$do_process_payment = filter_input( INPUT_POST, 'pronamic_ideal_process_payment', FILTER_SANITIZE_STRING );
 
 		if ( strlen( $do_process_payment ) <= 0 ) {
-
 			return;
 		}
 
@@ -380,7 +377,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		$transaction_object = it_exchange_generate_transaction_object();
 
 		if ( ! $transaction_object instanceof stdClass ) {
-
 			return;
 		}
 
@@ -391,7 +387,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( $configuration_id );
 
 		if ( $gateway ) {
-
 			$data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( $unique_hash, $transaction_object );
 
 			$payment_method = self::get_gateway_payment_method();
@@ -425,21 +420,19 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		$empty_data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( 0, new stdClass() );
 
 		switch ( $payment->get_status() ) {
-
-			case Pronamic_WP_Pay_Statuses::CANCELLED:
+			case Pronamic_WP_Pay_Statuses::CANCELLED :
 				$url = $empty_data->get_cancel_url();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::EXPIRED:
+			case Pronamic_WP_Pay_Statuses::EXPIRED :
 				$url = $empty_data->get_error_url();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::FAILURE:
+			case Pronamic_WP_Pay_Statuses::FAILURE :
 				$url = $empty_data->get_error_url();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::SUCCESS:
-
+			case Pronamic_WP_Pay_Statuses::SUCCESS :
 				$transient_transaction = it_exchange_get_transient_transaction( self::$slug, $payment->get_source_id() );
 
 				// Create transaction
@@ -465,10 +458,8 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 				it_exchange_empty_shopping_cart();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::OPEN:
-
-			default:
-
+			case Pronamic_WP_Pay_Statuses::OPEN :
+			default :
 				$url = $empty_data->get_normal_return_url();
 
 				break;
