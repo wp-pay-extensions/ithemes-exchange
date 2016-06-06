@@ -241,7 +241,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		}
 
 		return array(
-			'' => _x( 'All', 'Payment method field', 'pronamic-ideal' ),
+			'' => _x( 'All', 'Payment method field', 'pronamic_ideal' ),
 		);
 	}
 
