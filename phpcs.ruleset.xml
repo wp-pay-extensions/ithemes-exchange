@@ -5,5 +5,7 @@
 		<exclude name="Generic.Files.LowercasedFilename.NotFound" />
 
 		<exclude name="Squiz.Commenting" />
+
+		<exclude name="WordPress.VIP.RestrictedFunctions.wp_redirect" />
 	</rule>
 </ruleset>
