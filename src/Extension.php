@@ -92,7 +92,8 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		add_action( "it_exchange_save_{$slug}_wizard_settings", array( __CLASS__, 'save_wizard_settings' ) );
 
 		// Filters
-		add_filter( "pronamic_payment_source_text_{$slug}", array( __CLASS__, 'source_text' ), 10, 2 );
+		add_filter( 'pronamic_payment_source_text_' . $slug, array( __CLASS__, 'source_text' ), 10, 2 );
+		add_filter( 'pronamic_payment_source_description_' . $slug,   array( __CLASS__, 'source_description' ), 10, 2 );
 
 		add_filter( "it_exchange_get_{$slug}_make_payment_button", array( __CLASS__, 'make_payment_button' ) );
 
@@ -488,5 +489,14 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		$text .= sprintf( __( 'Order #%s', 'pronamic_ideal' ), $payment->source_id );
 
 		return $text;
+	}
+
+	/**
+	 * Source description.
+	 */
+	public function source_description( $description, Pronamic_Pay_Payment $payment ) {
+		$description = __( 'iThemes Exchange Order', 'pronamic_ideal' );
+
+		return $description;
 	}
 }
