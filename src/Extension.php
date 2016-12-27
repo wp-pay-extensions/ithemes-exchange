@@ -494,7 +494,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	/**
 	 * Source description.
 	 */
-	public function source_description( $description, Pronamic_Pay_Payment $payment ) {
+	public static function source_description( $description, Pronamic_Pay_Payment $payment ) {
 		$description = __( 'iThemes Exchange Order', 'pronamic_ideal' );
 
 		return $description;
