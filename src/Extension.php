@@ -3,11 +3,11 @@
 /**
  * Title: Exchange iDEAL Add-On
  * Description:
- * Copyright Copyright (c) 2005 - 2016
+ * Copyright Copyright (c) 2005 - 2017
  * Company: Pronamic
  *
  * @author Stefan Boonstra
- * @version 1.1.3
+ * @version 1.1.4
  * @since 1.0.0
  */
 class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
