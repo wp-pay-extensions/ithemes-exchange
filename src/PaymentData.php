@@ -135,6 +135,36 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	}
 
 	/**
+	 * Get first name.
+	 *
+	 * @return string
+	 */
+	public function get_first_name() {
+		$shipping_address = $this->transaction_object->shipping_address;
+
+		if ( is_array( $shipping_address ) ) {
+			if ( isset( $shipping_address['first-name'] ) ) {
+				return $shipping_address['first-name'];
+			}
+		}
+	}
+
+	/**
+	 * Get last name.
+	 *
+	 * @return string
+	 */
+	public function get_last_name() {
+		$shipping_address = $this->transaction_object->shipping_address;
+
+		if ( is_array( $shipping_address ) ) {
+			if ( isset( $shipping_address['last-name'] ) ) {
+				return $shipping_address['last-name'];
+			}
+		}
+	}
+
+	/**
 	 * Get customer name
 	 *
 	 * @return string
