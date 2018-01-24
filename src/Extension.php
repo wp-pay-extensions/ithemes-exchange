@@ -1,4 +1,6 @@
 <?php
+use Pronamic\WordPress\Pay\Payments\Payment;
+use Pronamic\WordPress\Pay\Plugin;
 
 /**
  * Title: Exchange iDEAL Add-On
@@ -69,9 +71,9 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 			'description'       => __( 'Adds the ability for users to checkout with iDEAL.', 'pronamic_ideal' ),
 			'author'            => 'Pronamic',
 			'author_url'        => 'http://www.pronamic.eu/wordpress-plugins/pronamic-ideal/',
-			'icon'              => plugins_url( 'images/icon-50x50.png', Pronamic_WP_Pay_Plugin::$file ),
+			'icon'              => plugins_url( 'images/icon-50x50.png', Plugin::$file ),
 			// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.7.16/core-addons/load.php#L42
-			'wizard-icon'       => plugins_url( 'images/icon-50x50.png', Pronamic_WP_Pay_Plugin::$file ),
+			'wizard-icon'       => plugins_url( 'images/icon-50x50.png', Plugin::$file ),
 			'file'              => dirname( __FILE__ ) . '/../views/add-on.php',
 			'category'          => 'transaction-methods',
 			'supports'          => array( 'transaction_status' => true ),
@@ -134,7 +136,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 			self::OPTION_GROUP, // section
 			array(
 				'label_for' => self::CONFIGURATION_OPTION_KEY,
-				'options'   => Pronamic_WP_Pay_Plugin::get_config_select_options(),
+				'options'   => Plugin::get_config_select_options(),
 			) // args
 		);
 
@@ -230,7 +232,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * Payment method select options
 	 */
 	public static function get_payment_method_select_options() {
-		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( self::get_gateway_configuration_id() );
+		$gateway = Plugin::get_gateway( self::get_gateway_configuration_id() );
 
 		if ( $gateway ) {
 			$payment_method_field = $gateway->get_payment_method_field();
@@ -344,7 +346,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		// Cart total > 0
 		$payment_form = '';
 
-		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( self::get_gateway_configuration_id() );
+		$gateway = Plugin::get_gateway( self::get_gateway_configuration_id() );
 
 		if ( $gateway ) {
 			$gateway->set_payment_method( self::get_gateway_payment_method() );
@@ -385,7 +387,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 		$configuration_id = self::get_gateway_configuration_id();
 
-		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( $configuration_id );
+		$gateway = Plugin::get_gateway( $configuration_id );
 
 		if ( $gateway ) {
 			$data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( $unique_hash, $transaction_object );
@@ -394,12 +396,12 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 			$gateway->set_payment_method( $payment_method );
 
-			$payment = Pronamic_WP_Pay_Plugin::start( $configuration_id, $gateway, $data, $payment_method );
+			$payment = Plugin::start( $configuration_id, $gateway, $data, $payment_method );
 
 			$error = $gateway->get_error();
 
 			if ( is_wp_error( $error ) ) {
-				Pronamic_WP_Pay_Plugin::render_errors( $error );
+				Plugin::render_errors( $error );
 			} else {
 				$gateway->redirect( $payment );
 			}
@@ -479,11 +481,11 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * Source column
 	 *
 	 * @param string                  $text
-	 * @param Pronamic_WP_Pay_Payment $payment
+	 * @param Payment $payment
 	 *
 	 * @return string $text
 	 */
-	public static function source_text( $text, Pronamic_WP_Pay_Payment $payment ) {
+	public static function source_text( $text, Payment $payment ) {
 		$text  = '';
 		$text .= __( 'iThemes Exchange', 'pronamic_ideal' ) . '<br />';
 		$text .= sprintf( __( 'Order #%s', 'pronamic_ideal' ), $payment->source_id );
