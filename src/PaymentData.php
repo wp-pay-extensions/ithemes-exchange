@@ -1,5 +1,7 @@
 <?php
 use Pronamic\WordPress\Pay\Payments\PaymentData;
+use Pronamic\WordPress\Pay\Payments\Item;
+use Pronamic\WordPress\Pay\Payments\Items;
 
 /**
  * Title: iThemes Exchange payment data
@@ -98,15 +100,15 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends PaymentData
 	 *
 	 * @see Pronamic_Pay_PaymentDataInterface::get_items()
 	 *
-	 * @return Pronamic_IDeal_Items
+	 * @return Items
 	 */
 	public function get_items() {
 		// Items
-		$items = new Pronamic_IDeal_Items();
+		$items = new Items();
 
 		// Item
 		// We only add one total item, because iDEAL cant work with negative price items (discount)
-		$item = new Pronamic_IDeal_Item();
+		$item = new Item();
 		$item->setNumber( $this->unique_hash );
 		$item->setDescription( $this->get_description() );
 		$item->setPrice( $this->transaction_object->total );

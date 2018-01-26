@@ -1,4 +1,5 @@
 <?php
+use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 
@@ -423,19 +424,19 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		$empty_data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( 0, new stdClass() );
 
 		switch ( $payment->get_status() ) {
-			case Pronamic_WP_Pay_Statuses::CANCELLED :
+			case Statuses::CANCELLED :
 				$url = $empty_data->get_cancel_url();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::EXPIRED :
+			case Statuses::EXPIRED :
 				$url = $empty_data->get_error_url();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::FAILURE :
+			case Statuses::FAILURE :
 				$url = $empty_data->get_error_url();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::SUCCESS :
+			case Statuses::SUCCESS :
 				$transient_transaction = it_exchange_get_transient_transaction( self::$slug, $payment->get_source_id() );
 
 				// Create transaction
@@ -461,7 +462,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 				it_exchange_empty_shopping_cart();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::OPEN :
+			case Statuses::OPEN :
 			default :
 				$url = $empty_data->get_normal_return_url();
 
