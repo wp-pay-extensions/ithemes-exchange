@@ -96,7 +96,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 		// Filters
 		add_filter( 'pronamic_payment_source_text_' . $slug, array( __CLASS__, 'source_text' ), 10, 2 );
-		add_filter( 'pronamic_payment_source_description_' . $slug,   array( __CLASS__, 'source_description' ), 10, 2 );
+		add_filter( 'pronamic_payment_source_description_' . $slug, array( __CLASS__, 'source_description' ), 10, 2 );
 
 		add_filter( "it_exchange_get_{$slug}_make_payment_button", array( __CLASS__, 'make_payment_button' ) );
 
@@ -270,7 +270,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * @return array $errors
 	 */
 	public static function save_wizard_settings( $errors ) {
-		$title          = filter_input( INPUT_POST, self::BUTTON_TITLE_OPTION_KEY , FILTER_SANITIZE_STRING );
+		$title          = filter_input( INPUT_POST, self::BUTTON_TITLE_OPTION_KEY, FILTER_SANITIZE_STRING );
 		$config_id      = filter_input( INPUT_POST, self::CONFIGURATION_OPTION_KEY, FILTER_VALIDATE_INT );
 		$payment_method = filter_input( INPUT_POST, self::PAYMENT_METHOD_OPTION_KEY, FILTER_SANITIZE_STRING );
 
