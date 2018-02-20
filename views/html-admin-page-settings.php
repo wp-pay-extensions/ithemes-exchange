@@ -1,3 +1,8 @@
+<?php
+
+use Pronamic\WordPress\Pay\Extensions\IThemesExchange\Extension;
+
+?>
 <div class="wrap">
 	<h1><?php esc_html_e( 'iDEAL', 'pronamic_ideal' ); ?></h1>
 
@@ -8,9 +13,9 @@
 	</div>
 
 	<form action="options.php" method="post">
-		<?php settings_fields( Pronamic_WP_Pay_Extensions_IThemesExchange_Extension::OPTION_GROUP ); ?>
+		<?php settings_fields( Extension::OPTION_GROUP ); ?>
 
-		<?php do_settings_sections( Pronamic_WP_Pay_Extensions_IThemesExchange_Extension::OPTION_GROUP ); ?>
+		<?php do_settings_sections( Extension::OPTION_GROUP ); ?>
 
 		<?php submit_button(); ?>
 	</form>

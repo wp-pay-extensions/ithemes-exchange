@@ -1,7 +1,11 @@
 <?php
+
+namespace Pronamic\WordPress\Pay\Extensions\IThemesExchange;
+
 use Pronamic\WordPress\Pay\Core\Statuses;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
+use stdClass;
 
 /**
  * Title: Exchange iDEAL Add-On
@@ -9,12 +13,11 @@ use Pronamic\WordPress\Pay\Plugin;
  * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @author Stefan Boonstra
+ * @author  Stefan Boonstra
  * @version 1.1.4
- * @since 1.0.0
+ * @since   1.0.0
  */
-class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
-
+class Extension {
 	/**
 	 * The add-on's slug.
 	 *
@@ -329,7 +332,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * @return boolean
 	 */
 	public static function transaction_is_cleared_for_delivery( $cleared, $transaction ) {
-		return Pronamic_WP_Pay_Extensions_IThemesExchange_IThemesExchange::ORDER_STATUS_PAID === it_exchange_get_transaction_status( $transaction );
+		return IThemesExchange::ORDER_STATUS_PAID === it_exchange_get_transaction_status( $transaction );
 	}
 
 	/**
@@ -391,7 +394,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		$gateway = Plugin::get_gateway( $configuration_id );
 
 		if ( $gateway ) {
-			$data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( $unique_hash, $transaction_object );
+			$data = new PaymentData( $unique_hash, $transaction_object );
 
 			$payment_method = self::get_gateway_payment_method();
 
@@ -416,12 +419,12 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	/**
 	 * Update the status of the specified payment
 	 *
-	 * @param Pronamic_Pay_Payment $payment
-	 * @param bool                 $can_redirect (optional, defaults to false)
+	 * @param Payment $payment
+	 * @param bool    $can_redirect (optional, defaults to false)
 	 */
-	public static function status_update( Pronamic_Pay_Payment $payment, $can_redirect = false ) {
+	public static function status_update( Payment $payment, $can_redirect = false ) {
 		// Create empty payment data object to be able to get the URLs
-		$empty_data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( 0, new stdClass() );
+		$empty_data = new PaymentData( 0, new stdClass() );
 
 		switch ( $payment->get_status() ) {
 			case Statuses::CANCELLED :
@@ -443,7 +446,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 				$transaction_id = it_exchange_add_transaction(
 					self::$slug,
 					$payment->get_source_id(),
-					Pronamic_WP_Pay_Extensions_IThemesExchange_IThemesExchange::ORDER_STATUS_PAID,
+					IThemesExchange::ORDER_STATUS_PAID,
 					$transient_transaction['customer_id'],
 					$transient_transaction['transaction_object']
 				);
@@ -455,7 +458,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 					break;
 				}
 
-				$data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( $transaction_id, new stdClass() );
+				$data = new PaymentData( $transaction_id, new stdClass() );
 
 				$url = $data->get_success_url();
 
@@ -479,16 +482,16 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	//////////////////////////////////////////////////
 
 	/**
-	 * Source column
+	 * Source text.
 	 *
-	 * @param string                  $text
+	 * @param string  $text
 	 * @param Payment $payment
 	 *
 	 * @return string $text
 	 */
 	public static function source_text( $text, Payment $payment ) {
-		$text  = '';
-		$text .= __( 'iThemes Exchange', 'pronamic_ideal' ) . '<br />';
+		$text = __( 'iThemes Exchange', 'pronamic_ideal' ) . '<br />';
+
 		$text .= sprintf( __( 'Order #%s', 'pronamic_ideal' ), $payment->source_id );
 
 		return $text;
@@ -496,10 +499,13 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 	/**
 	 * Source description.
+	 *
+	 * @param string  $description
+	 * @param Payment $payment
+	 *
+	 * @return string
 	 */
-	public static function source_description( $description, Pronamic_Pay_Payment $payment ) {
-		$description = __( 'iThemes Exchange Order', 'pronamic_ideal' );
-
-		return $description;
+	public static function source_description( $description, Payment $payment ) {
+		return __( 'iThemes Exchange Order', 'pronamic_ideal' );
 	}
 }

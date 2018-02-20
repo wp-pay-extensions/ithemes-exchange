@@ -1,7 +1,11 @@
 <?php
-use Pronamic\WordPress\Pay\Payments\PaymentData;
+
+namespace Pronamic\WordPress\Pay\Extensions\IThemesExchange;
+
+use Pronamic\WordPress\Pay\Payments\PaymentData as Pay_PaymentData;
 use Pronamic\WordPress\Pay\Payments\Item;
 use Pronamic\WordPress\Pay\Payments\Items;
+use stdClass;
 
 /**
  * Title: iThemes Exchange payment data
@@ -9,12 +13,11 @@ use Pronamic\WordPress\Pay\Payments\Items;
  * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @author Stefan Boonstra
+ * @author  Stefan Boonstra
  * @version 1.1.5
- * @since 1.0.0
+ * @since   1.0.0
  */
-class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends PaymentData {
-
+class PaymentData extends Pay_PaymentData {
 	/**
 	 * Unique hash with which the transaction data can be retrieved
 	 *
@@ -63,7 +66,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends PaymentData
 	 * @return string
 	 */
 	public function get_source() {
-		return Pronamic_WP_Pay_Extensions_IThemesExchange_Extension::$slug;
+		return Extension::$slug;
 	}
 
 	/**
@@ -145,10 +148,8 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends PaymentData
 	public function get_first_name() {
 		$shipping_address = $this->transaction_object->shipping_address;
 
-		if ( is_array( $shipping_address ) ) {
-			if ( isset( $shipping_address['first-name'] ) ) {
-				return $shipping_address['first-name'];
-			}
+		if ( is_array( $shipping_address ) && isset( $shipping_address['first-name'] ) ) {
+			return $shipping_address['first-name'];
 		}
 	}
 
@@ -160,10 +161,8 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends PaymentData
 	public function get_last_name() {
 		$shipping_address = $this->transaction_object->shipping_address;
 
-		if ( is_array( $shipping_address ) ) {
-			if ( isset( $shipping_address['last-name'] ) ) {
-				return $shipping_address['last-name'];
-			}
+		if ( is_array( $shipping_address ) && isset( $shipping_address['last-name'] ) ) {
+			return $shipping_address['last-name'];
 		}
 	}
 
@@ -196,10 +195,11 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends PaymentData
 	 * @return string
 	 */
 	public function get_address() {
-		$address  = $this->transaction_object->shipping_address['address1'];
-		$address .= ' ' . $this->transaction_object->shipping_address['address2'];
-
-		return $address;
+		return sprintf(
+			'%s %s',
+			$this->transaction_object->shipping_address['address1'],
+			$this->transaction_object->shipping_address['address2']
+		);
 	}
 
 	/**
