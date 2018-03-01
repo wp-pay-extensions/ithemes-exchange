@@ -41,8 +41,6 @@ class IThemesExchange {
 	 */
 	const ORDER_STATUS_VOIDED = 'voided';
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Check if iThemes Exchange is active (Automattic/developer style)
 	 *

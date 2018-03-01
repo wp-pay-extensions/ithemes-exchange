@@ -53,16 +53,12 @@ class Extension {
 	 */
 	const PAYMENT_METHOD_OPTION_KEY = 'pronamic_ithemes_exchange_ideal_addon_payment_method';
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Bootstrap.
 	 */
 	public static function bootstrap() {
 		add_action( 'it_exchange_register_addons', array( __CLASS__, 'init' ) );
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Initialize.
@@ -105,8 +101,6 @@ class Extension {
 
 		add_filter( "it_exchange_{$slug}_transaction_is_cleared_for_delivery", array( __CLASS__, 'transaction_is_cleared_for_delivery' ), 10, 2 );
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Register settings.
@@ -284,8 +278,6 @@ class Extension {
 		return $errors;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Get the iDEAL gateway title.
 	 *
@@ -318,8 +310,6 @@ class Extension {
 
 		return $payment_method;
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Returns a boolean. Is this transaction a status that warrants delivery of any products attached to it?
@@ -366,8 +356,6 @@ class Extension {
 		return $payment_form;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Check if an iDEAL payment needs to be processed.
 	 */
@@ -413,8 +401,6 @@ class Extension {
 			exit;
 		}
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Update the status of the specified payment
@@ -478,8 +464,6 @@ class Extension {
 			exit;
 		}
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Source text.

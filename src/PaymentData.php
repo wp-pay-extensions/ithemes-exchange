@@ -32,8 +32,6 @@ class PaymentData extends Pay_PaymentData {
 	 */
 	private $transaction_object;
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Constructs and initializes an Easy Digital Downloads iDEAL data proxy
 	 *
@@ -46,8 +44,6 @@ class PaymentData extends Pay_PaymentData {
 		$this->unique_hash        = $unique_hash;
 		$this->transaction_object = $transaction_object;
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Get source ID
@@ -219,8 +215,6 @@ class PaymentData extends Pay_PaymentData {
 	public function get_zip() {
 		return $this->transaction_object->shipping_address['zip'];
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Get home URL
