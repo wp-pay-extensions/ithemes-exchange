@@ -413,19 +413,19 @@ class Extension {
 		$empty_data = new PaymentData( 0, new stdClass() );
 
 		switch ( $payment->get_status() ) {
-			case Statuses::CANCELLED :
+			case Statuses::CANCELLED:
 				$url = $empty_data->get_cancel_url();
 
 				break;
-			case Statuses::EXPIRED :
+			case Statuses::EXPIRED:
 				$url = $empty_data->get_error_url();
 
 				break;
-			case Statuses::FAILURE :
+			case Statuses::FAILURE:
 				$url = $empty_data->get_error_url();
 
 				break;
-			case Statuses::SUCCESS :
+			case Statuses::SUCCESS:
 				$transient_transaction = it_exchange_get_transient_transaction( self::$slug, $payment->get_source_id() );
 
 				// Create transaction
@@ -451,8 +451,8 @@ class Extension {
 				it_exchange_empty_shopping_cart();
 
 				break;
-			case Statuses::OPEN :
-			default :
+			case Statuses::OPEN:
+			default:
 				$url = $empty_data->get_normal_return_url();
 
 				break;
@@ -476,6 +476,7 @@ class Extension {
 	public static function source_text( $text, Payment $payment ) {
 		$text = __( 'iThemes Exchange', 'pronamic_ideal' ) . '<br />';
 
+		/* translators: %s: payment source id */
 		$text .= sprintf( __( 'Order #%s', 'pronamic_ideal' ), $payment->source_id );
 
 		return $text;

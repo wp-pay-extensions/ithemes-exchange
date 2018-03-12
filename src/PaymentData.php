@@ -71,7 +71,8 @@ class PaymentData extends Pay_PaymentData {
 	 * @return string
 	 */
 	public function get_title() {
-		return sprintf( __( 'iThemes Exchange order %s', 'pronamic_ideal' ), $this->unique_hash );
+		/* translators: %s: order id */
+		return sprintf( __( 'iThemes Exchange order %s', 'pronamic_ideal' ), $this->get_order_id() );
 	}
 
 	/**
@@ -80,6 +81,7 @@ class PaymentData extends Pay_PaymentData {
 	 * @return string
 	 */
 	public function get_description() {
+		/* translators: %s: order id */
 		$description = sprintf( __( 'Order #%s', 'pronamic_ideal' ), $this->get_order_id() );
 
 		return $description . ' - ' . $this->transaction_object->description;
