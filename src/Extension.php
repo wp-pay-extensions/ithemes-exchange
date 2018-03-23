@@ -233,11 +233,7 @@ class Extension {
 		$gateway = Plugin::get_gateway( self::get_gateway_configuration_id() );
 
 		if ( $gateway ) {
-			$payment_method_field = $gateway->get_payment_method_field();
-
-			if ( $payment_method_field ) {
-				return $payment_method_field['choices'][0]['options'];
-			}
+			return $gateway->get_payment_method_field_options();
 		}
 
 		return array(
