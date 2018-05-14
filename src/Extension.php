@@ -1,17 +1,23 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Extensions\IThemesExchange;
+
+use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\Payment;
+use Pronamic\WordPress\Pay\Plugin;
+use stdClass;
+
 /**
  * Title: Exchange iDEAL Add-On
  * Description:
- * Copyright Copyright (c) 2005 - 2017
+ * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @author Stefan Boonstra
- * @version 1.1.4
- * @since 1.0.0
+ * @author  Stefan Boonstra
+ * @version 2.0.0
+ * @since   1.0.0
  */
-class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
-
+class Extension {
 	/**
 	 * The add-on's slug.
 	 *
@@ -47,16 +53,12 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 */
 	const PAYMENT_METHOD_OPTION_KEY = 'pronamic_ithemes_exchange_ideal_addon_payment_method';
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Bootstrap.
 	 */
 	public static function bootstrap() {
 		add_action( 'it_exchange_register_addons', array( __CLASS__, 'init' ) );
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Initialize.
@@ -69,9 +71,9 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 			'description'       => __( 'Adds the ability for users to checkout with iDEAL.', 'pronamic_ideal' ),
 			'author'            => 'Pronamic',
 			'author_url'        => 'http://www.pronamic.eu/wordpress-plugins/pronamic-ideal/',
-			'icon'              => plugins_url( 'images/icon-50x50.png', Pronamic_WP_Pay_Plugin::$file ),
+			'icon'              => plugins_url( 'images/icon-50x50.png', Plugin::$file ),
 			// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.7.16/core-addons/load.php#L42
-			'wizard-icon'       => plugins_url( 'images/icon-50x50.png', Pronamic_WP_Pay_Plugin::$file ),
+			'wizard-icon'       => plugins_url( 'images/icon-50x50.png', Plugin::$file ),
 			'file'              => dirname( __FILE__ ) . '/../views/add-on.php',
 			'category'          => 'transaction-methods',
 			'supports'          => array( 'transaction_status' => true ),
@@ -93,14 +95,12 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 		// Filters
 		add_filter( 'pronamic_payment_source_text_' . $slug, array( __CLASS__, 'source_text' ), 10, 2 );
-		add_filter( 'pronamic_payment_source_description_' . $slug,   array( __CLASS__, 'source_description' ), 10, 2 );
+		add_filter( 'pronamic_payment_source_description_' . $slug, array( __CLASS__, 'source_description' ), 10, 2 );
 
 		add_filter( "it_exchange_get_{$slug}_make_payment_button", array( __CLASS__, 'make_payment_button' ) );
 
 		add_filter( "it_exchange_{$slug}_transaction_is_cleared_for_delivery", array( __CLASS__, 'transaction_is_cleared_for_delivery' ), 10, 2 );
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Register settings.
@@ -134,7 +134,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 			self::OPTION_GROUP, // section
 			array(
 				'label_for' => self::CONFIGURATION_OPTION_KEY,
-				'options'   => Pronamic_WP_Pay_Plugin::get_config_select_options(),
+				'options'   => Plugin::get_config_select_options(),
 			) // args
 		);
 
@@ -230,14 +230,10 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * Payment method select options
 	 */
 	public static function get_payment_method_select_options() {
-		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( self::get_gateway_configuration_id() );
+		$gateway = Plugin::get_gateway( self::get_gateway_configuration_id() );
 
 		if ( $gateway ) {
-			$payment_method_field = $gateway->get_payment_method_field();
-
-			if ( $payment_method_field ) {
-				return $payment_method_field['choices'][0]['options'];
-			}
+			return $gateway->get_payment_method_field_options();
 		}
 
 		return array(
@@ -267,7 +263,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * @return array $errors
 	 */
 	public static function save_wizard_settings( $errors ) {
-		$title          = filter_input( INPUT_POST, self::BUTTON_TITLE_OPTION_KEY , FILTER_SANITIZE_STRING );
+		$title          = filter_input( INPUT_POST, self::BUTTON_TITLE_OPTION_KEY, FILTER_SANITIZE_STRING );
 		$config_id      = filter_input( INPUT_POST, self::CONFIGURATION_OPTION_KEY, FILTER_VALIDATE_INT );
 		$payment_method = filter_input( INPUT_POST, self::PAYMENT_METHOD_OPTION_KEY, FILTER_SANITIZE_STRING );
 
@@ -277,8 +273,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 		return $errors;
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Get the iDEAL gateway title.
@@ -313,8 +307,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		return $payment_method;
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Returns a boolean. Is this transaction a status that warrants delivery of any products attached to it?
 	 *
@@ -326,7 +318,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 	 * @return boolean
 	 */
 	public static function transaction_is_cleared_for_delivery( $cleared, $transaction ) {
-		return Pronamic_WP_Pay_Extensions_IThemesExchange_IThemesExchange::ORDER_STATUS_PAID === it_exchange_get_transaction_status( $transaction );
+		return IThemesExchange::ORDER_STATUS_PAID === it_exchange_get_transaction_status( $transaction );
 	}
 
 	/**
@@ -344,7 +336,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		// Cart total > 0
 		$payment_form = '';
 
-		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( self::get_gateway_configuration_id() );
+		$gateway = Plugin::get_gateway( self::get_gateway_configuration_id() );
 
 		if ( $gateway ) {
 			$gateway->set_payment_method( self::get_gateway_payment_method() );
@@ -359,8 +351,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 		return $payment_form;
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Check if an iDEAL payment needs to be processed.
@@ -385,21 +375,21 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 		$configuration_id = self::get_gateway_configuration_id();
 
-		$gateway = Pronamic_WP_Pay_Plugin::get_gateway( $configuration_id );
+		$gateway = Plugin::get_gateway( $configuration_id );
 
 		if ( $gateway ) {
-			$data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( $unique_hash, $transaction_object );
+			$data = new PaymentData( $unique_hash, $transaction_object );
 
 			$payment_method = self::get_gateway_payment_method();
 
 			$gateway->set_payment_method( $payment_method );
 
-			$payment = Pronamic_WP_Pay_Plugin::start( $configuration_id, $gateway, $data, $payment_method );
+			$payment = Plugin::start( $configuration_id, $gateway, $data, $payment_method );
 
 			$error = $gateway->get_error();
 
 			if ( is_wp_error( $error ) ) {
-				Pronamic_WP_Pay_Plugin::render_errors( $error );
+				Plugin::render_errors( $error );
 			} else {
 				$gateway->redirect( $payment );
 			}
@@ -408,39 +398,37 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		}
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Update the status of the specified payment
 	 *
-	 * @param Pronamic_Pay_Payment $payment
-	 * @param bool                 $can_redirect (optional, defaults to false)
+	 * @param Payment $payment
+	 * @param bool    $can_redirect (optional, defaults to false)
 	 */
-	public static function status_update( Pronamic_Pay_Payment $payment, $can_redirect = false ) {
+	public static function status_update( Payment $payment, $can_redirect = false ) {
 		// Create empty payment data object to be able to get the URLs
-		$empty_data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( 0, new stdClass() );
+		$empty_data = new PaymentData( 0, new stdClass() );
 
 		switch ( $payment->get_status() ) {
-			case Pronamic_WP_Pay_Statuses::CANCELLED :
+			case Statuses::CANCELLED:
 				$url = $empty_data->get_cancel_url();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::EXPIRED :
+			case Statuses::EXPIRED:
 				$url = $empty_data->get_error_url();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::FAILURE :
+			case Statuses::FAILURE:
 				$url = $empty_data->get_error_url();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::SUCCESS :
+			case Statuses::SUCCESS:
 				$transient_transaction = it_exchange_get_transient_transaction( self::$slug, $payment->get_source_id() );
 
 				// Create transaction
 				$transaction_id = it_exchange_add_transaction(
 					self::$slug,
 					$payment->get_source_id(),
-					Pronamic_WP_Pay_Extensions_IThemesExchange_IThemesExchange::ORDER_STATUS_PAID,
+					IThemesExchange::ORDER_STATUS_PAID,
 					$transient_transaction['customer_id'],
 					$transient_transaction['transaction_object']
 				);
@@ -452,15 +440,15 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 					break;
 				}
 
-				$data = new Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData( $transaction_id, new stdClass() );
+				$data = new PaymentData( $transaction_id, new stdClass() );
 
 				$url = $data->get_success_url();
 
 				it_exchange_empty_shopping_cart();
 
 				break;
-			case Pronamic_WP_Pay_Statuses::OPEN :
-			default :
+			case Statuses::OPEN:
+			default:
 				$url = $empty_data->get_normal_return_url();
 
 				break;
@@ -473,19 +461,18 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 		}
 	}
 
-	//////////////////////////////////////////////////
-
 	/**
-	 * Source column
+	 * Source text.
 	 *
-	 * @param string                  $text
-	 * @param Pronamic_WP_Pay_Payment $payment
+	 * @param string  $text
+	 * @param Payment $payment
 	 *
 	 * @return string $text
 	 */
-	public static function source_text( $text, Pronamic_WP_Pay_Payment $payment ) {
-		$text  = '';
-		$text .= __( 'iThemes Exchange', 'pronamic_ideal' ) . '<br />';
+	public static function source_text( $text, Payment $payment ) {
+		$text = __( 'iThemes Exchange', 'pronamic_ideal' ) . '<br />';
+
+		/* translators: %s: payment source id */
 		$text .= sprintf( __( 'Order #%s', 'pronamic_ideal' ), $payment->source_id );
 
 		return $text;
@@ -493,10 +480,13 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_Extension {
 
 	/**
 	 * Source description.
+	 *
+	 * @param string  $description
+	 * @param Payment $payment
+	 *
+	 * @return string
 	 */
-	public static function source_description( $description, Pronamic_Pay_Payment $payment ) {
-		$description = __( 'iThemes Exchange Order', 'pronamic_ideal' );
-
-		return $description;
+	public static function source_description( $description, Payment $payment ) {
+		return __( 'iThemes Exchange Order', 'pronamic_ideal' );
 	}
 }

@@ -1,16 +1,18 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Extensions\IThemesExchange;
+
 /**
  * Title: iThemes Exchange
  * Description:
- * Copyright: Copyright (c) 2005 - 2017
+ * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @author Stefan Boonstra
- * @version 1.0.0
- * @since 1.0.0
+ * @author  Stefan Boonstra
+ * @version 2.0.0
+ * @since   1.0.0
  */
-class Pronamic_WP_Pay_Extensions_IThemesExchange_IThemesExchange {
+class IThemesExchange {
 	/**
 	 * Order status pending
 	 *
@@ -38,8 +40,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_IThemesExchange {
 	 * @var string
 	 */
 	const ORDER_STATUS_VOIDED = 'voided';
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Check if iThemes Exchange is active (Automattic/developer style)

@@ -1,17 +1,23 @@
 <?php
 
+namespace Pronamic\WordPress\Pay\Extensions\IThemesExchange;
+
+use Pronamic\WordPress\Pay\Payments\PaymentData as Pay_PaymentData;
+use Pronamic\WordPress\Pay\Payments\Item;
+use Pronamic\WordPress\Pay\Payments\Items;
+use stdClass;
+
 /**
  * Title: iThemes Exchange payment data
  * Description:
- * Copyright: Copyright (c) 2005 - 2017
+ * Copyright: Copyright (c) 2005 - 2018
  * Company: Pronamic
  *
- * @author Stefan Boonstra
- * @version 1.1.5
- * @since 1.0.0
+ * @author  Stefan Boonstra
+ * @version 2.0.0
+ * @since   1.0.0
  */
-class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP_Pay_PaymentData {
-
+class PaymentData extends Pay_PaymentData {
 	/**
 	 * Unique hash with which the transaction data can be retrieved
 	 *
@@ -26,8 +32,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 */
 	private $transaction_object;
 
-	//////////////////////////////////////////////////
-
 	/**
 	 * Constructs and initializes an Easy Digital Downloads iDEAL data proxy
 	 *
@@ -40,8 +44,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 		$this->unique_hash        = $unique_hash;
 		$this->transaction_object = $transaction_object;
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Get source ID
@@ -60,7 +62,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 * @return string
 	 */
 	public function get_source() {
-		return Pronamic_WP_Pay_Extensions_IThemesExchange_Extension::$slug;
+		return Extension::$slug;
 	}
 
 	/**
@@ -69,7 +71,8 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 * @return string
 	 */
 	public function get_title() {
-		return sprintf( __( 'iThemes Exchange order %s', 'pronamic_ideal' ), $this->unique_hash );
+		/* translators: %s: order id */
+		return sprintf( __( 'iThemes Exchange order %s', 'pronamic_ideal' ), $this->get_order_id() );
 	}
 
 	/**
@@ -78,6 +81,7 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 * @return string
 	 */
 	public function get_description() {
+		/* translators: %s: order id */
 		$description = sprintf( __( 'Order #%s', 'pronamic_ideal' ), $this->get_order_id() );
 
 		return $description . ' - ' . $this->transaction_object->description;
@@ -97,15 +101,15 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 *
 	 * @see Pronamic_Pay_PaymentDataInterface::get_items()
 	 *
-	 * @return Pronamic_IDeal_Items
+	 * @return Items
 	 */
 	public function get_items() {
 		// Items
-		$items = new Pronamic_IDeal_Items();
+		$items = new Items();
 
 		// Item
 		// We only add one total item, because iDEAL cant work with negative price items (discount)
-		$item = new Pronamic_IDeal_Item();
+		$item = new Item();
 		$item->setNumber( $this->unique_hash );
 		$item->setDescription( $this->get_description() );
 		$item->setPrice( $this->transaction_object->total );
@@ -142,10 +146,8 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	public function get_first_name() {
 		$shipping_address = $this->transaction_object->shipping_address;
 
-		if ( is_array( $shipping_address ) ) {
-			if ( isset( $shipping_address['first-name'] ) ) {
-				return $shipping_address['first-name'];
-			}
+		if ( is_array( $shipping_address ) && isset( $shipping_address['first-name'] ) ) {
+			return $shipping_address['first-name'];
 		}
 	}
 
@@ -157,10 +159,8 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	public function get_last_name() {
 		$shipping_address = $this->transaction_object->shipping_address;
 
-		if ( is_array( $shipping_address ) ) {
-			if ( isset( $shipping_address['last-name'] ) ) {
-				return $shipping_address['last-name'];
-			}
+		if ( is_array( $shipping_address ) && isset( $shipping_address['last-name'] ) ) {
+			return $shipping_address['last-name'];
 		}
 	}
 
@@ -193,10 +193,11 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	 * @return string
 	 */
 	public function get_address() {
-		$address  = $this->transaction_object->shipping_address['address1'];
-		$address .= ' ' . $this->transaction_object->shipping_address['address2'];
-
-		return $address;
+		return sprintf(
+			'%s %s',
+			$this->transaction_object->shipping_address['address1'],
+			$this->transaction_object->shipping_address['address2']
+		);
 	}
 
 	/**
@@ -216,8 +217,6 @@ class Pronamic_WP_Pay_Extensions_IThemesExchange_PaymentData extends Pronamic_WP
 	public function get_zip() {
 		return $this->transaction_object->shipping_address['zip'];
 	}
-
-	//////////////////////////////////////////////////
 
 	/**
 	 * Get home URL
