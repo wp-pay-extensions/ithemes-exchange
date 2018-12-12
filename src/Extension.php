@@ -72,7 +72,7 @@ class Extension {
 			'author'            => 'Pronamic',
 			'author_url'        => 'http://www.pronamic.eu/wordpress-plugins/pronamic-ideal/',
 			'icon'              => plugins_url( 'images/icon-50x50.png', Plugin::$file ),
-			// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.7.16/core-addons/load.php#L42
+			// @link https://github.com/wp-plugins/ithemes-exchange/blob/1.7.16/core-addons/load.php#L42
 			'wizard-icon'       => plugins_url( 'images/icon-50x50.png', Plugin::$file ),
 			'file'              => dirname( __FILE__ ) . '/../views/add-on.php',
 			'category'          => 'transaction-methods',
@@ -326,8 +326,8 @@ class Extension {
 	 */
 	public static function make_payment_button() {
 		// Return early if cart total is <= 0
-		// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.11.8/core-addons/transaction-methods/paypal-standard/init.php#L359-L362
-		// @see https://github.com/wp-plugins/ithemes-exchange/blob/1.11.8/api/cart.php#L781-L809
+		// @link https://github.com/wp-plugins/ithemes-exchange/blob/1.11.8/core-addons/transaction-methods/paypal-standard/init.php#L359-L362
+		// @link https://github.com/wp-plugins/ithemes-exchange/blob/1.11.8/api/cart.php#L781-L809
 		$cart_total = it_exchange_get_cart_total( false );
 		if ( $cart_total <= 0 ) {
 			return;

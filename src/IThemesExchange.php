@@ -44,8 +44,8 @@ class IThemesExchange {
 	/**
 	 * Check if iThemes Exchange is active (Automattic/developer style)
 	 *
-	 * @see https://github.com/wp-plugins/ithemes-exchange/blob/1.7.14/init.php#L18
-	 * @see https://github.com/Automattic/developer/blob/1.1.2/developer.php#L73
+	 * @link https://github.com/wp-plugins/ithemes-exchange/blob/1.7.14/init.php#L18
+	 * @link https://github.com/Automattic/developer/blob/1.1.2/developer.php#L73
 	 *
 	 * @return boolean
 	 */

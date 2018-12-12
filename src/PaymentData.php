@@ -14,7 +14,7 @@ use stdClass;
  * Company: Pronamic
  *
  * @author  Stefan Boonstra
- * @version 2.0.0
+ * @version 2.0.1
  * @since   1.0.0
  */
 class PaymentData extends Pay_PaymentData {
@@ -110,10 +110,10 @@ class PaymentData extends Pay_PaymentData {
 		// Item
 		// We only add one total item, because iDEAL cant work with negative price items (discount)
 		$item = new Item();
-		$item->setNumber( $this->unique_hash );
-		$item->setDescription( $this->get_description() );
-		$item->setPrice( $this->transaction_object->total );
-		$item->setQuantity( 1 );
+		$item->set_number( $this->unique_hash );
+		$item->set_description( $this->get_description() );
+		$item->set_price( $this->transaction_object->total );
+		$item->set_quantity( 1 );
 
 		$items->addItem( $item );
 
