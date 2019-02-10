@@ -31,4 +31,8 @@
 		<exclude name="WordPress.VIP.RestrictedFunctions.wp_redirect" />
 		<exclude name="WordPress.VIP.RestrictedFunctions.wp_redirect_wp_redirect" />
 	</rule>
+
+    <rule ref="WordPress.Security.SafeRedirect.wp_redirect_wp_redirect">
+        <exclude-pattern>src/Extension.php</exclude-pattern>
+    </rule>
 </ruleset>
