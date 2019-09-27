@@ -384,15 +384,16 @@ class Extension {
 
 			$gateway->set_payment_method( $payment_method );
 
-			$payment = Plugin::start( $configuration_id, $gateway, $data, $payment_method );
+			try {
+				$payment = Plugin::start( $configuration_id, $gateway, $data, $payment_method );
+			} catch ( \Pronamic\WordPress\Pay\PayException $e ) {
+				$e->render();
 
-			$error = $gateway->get_error();
-
-			if ( is_wp_error( $error ) ) {
-				Plugin::render_errors( $error );
-			} else {
-				$gateway->redirect( $payment );
+				exit;
 			}
+
+			// Redirect.
+			$gateway->redirect( $payment );
 
 			exit;
 		}
