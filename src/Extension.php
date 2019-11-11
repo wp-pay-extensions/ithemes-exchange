@@ -386,8 +386,8 @@ class Extension {
 
 			try {
 				$payment = Plugin::start( $configuration_id, $gateway, $data, $payment_method );
-			} catch ( \Pronamic\WordPress\Pay\PayException $e ) {
-				$e->render();
+			} catch ( \Exception $e ) {
+				Plugin::render_exception( $e );
 
 				exit;
 			}
