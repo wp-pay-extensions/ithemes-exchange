@@ -2,7 +2,7 @@
 
 namespace Pronamic\WordPress\Pay\Extensions\IThemesExchange;
 
-use Pronamic\WordPress\Pay\Core\Statuses;
+use Pronamic\WordPress\Pay\Payments\PaymentStatus;
 use Pronamic\WordPress\Pay\Payments\Payment;
 use Pronamic\WordPress\Pay\Plugin;
 use stdClass;
@@ -14,7 +14,7 @@ use stdClass;
  * Company: Pronamic
  *
  * @author  Stefan Boonstra
- * @version 2.0.0
+ * @version 2.0.3
  * @since   1.0.0
  */
 class Extension {
@@ -384,15 +384,16 @@ class Extension {
 
 			$gateway->set_payment_method( $payment_method );
 
-			$payment = Plugin::start( $configuration_id, $gateway, $data, $payment_method );
+			try {
+				$payment = Plugin::start( $configuration_id, $gateway, $data, $payment_method );
+			} catch ( \Exception $e ) {
+				Plugin::render_exception( $e );
 
-			$error = $gateway->get_error();
-
-			if ( is_wp_error( $error ) ) {
-				Plugin::render_errors( $error );
-			} else {
-				$gateway->redirect( $payment );
+				exit;
 			}
+
+			// Redirect.
+			$gateway->redirect( $payment );
 
 			exit;
 		}
@@ -409,19 +410,19 @@ class Extension {
 		$empty_data = new PaymentData( 0, new stdClass() );
 
 		switch ( $payment->get_status() ) {
-			case Statuses::CANCELLED:
+			case PaymentStatus::CANCELLED:
 				$url = $empty_data->get_cancel_url();
 
 				break;
-			case Statuses::EXPIRED:
+			case PaymentStatus::EXPIRED:
 				$url = $empty_data->get_error_url();
 
 				break;
-			case Statuses::FAILURE:
+			case PaymentStatus::FAILURE:
 				$url = $empty_data->get_error_url();
 
 				break;
-			case Statuses::SUCCESS:
+			case PaymentStatus::SUCCESS:
 				$transient_transaction = it_exchange_get_transient_transaction( self::$slug, $payment->get_source_id() );
 
 				// Create transaction
@@ -447,7 +448,7 @@ class Extension {
 				it_exchange_empty_shopping_cart();
 
 				break;
-			case Statuses::OPEN:
+			case PaymentStatus::OPEN:
 			default:
 				$url = $empty_data->get_normal_return_url();
 
