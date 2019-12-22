@@ -14,7 +14,7 @@ use stdClass;
  * Company: Pronamic
  *
  * @author  Stefan Boonstra
- * @version 2.0.1
+ * @version 2.0.3
  * @since   1.0.0
  */
 class PaymentData extends Pay_PaymentData {
