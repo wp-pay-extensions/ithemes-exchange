@@ -1,4 +1,4 @@
-# WordPress Pay Extension: iThemes Exchange
+# [DEPRECATED] WordPress Pay Extension: iThemes Exchange
 
 **iThemes Exchange driver for the WordPress payment processing library.**
 

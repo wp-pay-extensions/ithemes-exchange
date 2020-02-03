@@ -1,7 +1,7 @@
 {
 	"name": "wp-pay-extensions/ithemes-exchange",
-	"description": "iThemes Exchange driver for the WordPress payment processing library.",
-	"keywords": ["wordpress", "wp", "pay", "ithemes", "exchange", "extension", "pronamic"],
+	"description": "✗ [DEPRECATED] iThemes Exchange driver for the WordPress payment processing library.",
+	"keywords": ["wordpress", "wp", "pay", "ithemes", "exchange", "extension", "pronamic", "deprecated"],
 	"homepage": "http://www.wp-pay.org/extensions/ithemes-exchange/",
 	"license": "GPL-3.0-or-later",
 	"authors": [
